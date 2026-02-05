@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebaseConfig";
+import Form from "./Form";
 
 export default function Welcome({ onLogout }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -26,12 +29,25 @@ export default function Welcome({ onLogout }) {
     }
   };
 
+  const handleFormSubmit = (formData) => {
+    setUserInfo(formData);
+    setShowForm(false);
+  };
+
+  const handleCancelForm = () => {
+    setShowForm(false);
+  };
+
   if (!user) {
     return (
       <div className="welcome-container">
         <p>Loading user info...</p>
       </div>
     );
+  }
+
+  if (showForm) {
+    return <Form onSubmit={handleFormSubmit} onCancel={handleCancelForm} />;
   }
 
   return (
@@ -49,18 +65,38 @@ export default function Welcome({ onLogout }) {
           </div>
         </div>
 
+        {userInfo && (
+          <div className="submitted-info">
+            <h3>Your Information:</h3>
+            <p><strong>Name:</strong> {userInfo.fullName}</p>
+            <p><strong>Age:</strong> {userInfo.age}</p>
+            {userInfo.phone && <p><strong>Phone:</strong> {userInfo.phone}</p>}
+            {userInfo.profession && <p><strong>Profession:</strong> {userInfo.profession}</p>}
+            {userInfo.bio && <p><strong>Bio:</strong> {userInfo.bio}</p>}
+          </div>
+        )}
+
         <div className="welcome-message">
           <p>You are successfully logged in to your account.</p>
           <p>You can now access all features of the application.</p>
         </div>
 
-        <button 
-          onClick={handleLogout}
-          disabled={loading}
-          className="logout-btn"
-        >
-          {loading ? "Logging out..." : "Logout"}
-        </button>
+        <div className="welcome-buttons">
+          <button 
+            onClick={() => setShowForm(true)}
+            className="form-btn"
+          >
+            {userInfo ? "Update Information" : "Complete Your Profile"}
+          </button>
+
+          <button 
+            onClick={handleLogout}
+            disabled={loading}
+            className="logout-btn"
+          >
+            {loading ? "Logging out..." : "Logout"}
+          </button>
+        </div>
       </div>
     </div>
   );
