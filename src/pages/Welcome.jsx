@@ -29,7 +29,7 @@ export default function Welcome({ onLogout }) {
   if (!user) {
     return (
       <div className="welcome-container">
-        <p>Loading user information...</p>
+        <p>Loading user info...</p>
       </div>
     );
   }
