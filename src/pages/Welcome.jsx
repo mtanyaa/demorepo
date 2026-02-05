@@ -53,7 +53,11 @@ export default function Welcome({ onLogout }) {
   return (
     <div className="welcome-container">
       <div className="welcome-card">
+<<<<<<< HEAD
         <h1>Welcome!! 🎉</h1>
+=======
+        <h1>Welcome!!</h1>
+>>>>>>> second
         
         <div className="user-info">
           <h2>Hello, {user.email}!</h2>
